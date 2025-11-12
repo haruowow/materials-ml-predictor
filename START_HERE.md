@@ -1,104 +1,90 @@
-# Materials Property Predictor
+# Getting Started
 
-Machine learning models for predicting band gaps and other properties of materials from their chemical formulas. Uses data from the Materials Project database.
+Quick guide to understanding and running this project.
 
-## What It Does
+## What's This Project About?
 
-This tool predicts materials properties (like band gap energy) just from knowing the chemical formula. Instead of running expensive simulations or lab experiments, you can get instant predictions for thousands of materials.
+I wanted to see if machine learning could predict materials properties without running expensive simulations. Turns out it works pretty well! The models can predict band gaps for most semiconductors and metals with decent accuracy.
 
-I built this to explore how well different ML approaches work for materials science problems - turns out Random Forest and XGBoost work surprisingly well for this.
-
-## Results
-
-Tested four different models on 1000 materials:
-
-- **Random Forest**: Best for metals and semiconductors (MAE ~0.35 eV)
-- **XGBoost**: Most consistent overall (R² ~0.90)
-- **Neural Network**: Highest accuracy (R² ~0.91)
-- **Ridge Regression**: Good baseline but struggles with non-linear patterns
-
-### Example Predictions
-
-| Material | Prediction | Actual | Notes |
-|----------|------------|--------|-------|
-| Silicon | 0.90 eV | 1.1 eV | Pretty close |
-| Iron | 0.50 eV | 0.0 eV | Correctly identifies as metal |
-| TiO2 | 2.61 eV | 3.0 eV | Good estimate |
-
-## How to Use It
-
-### Setup
-```bash
-git clone https://github.com/haruowow/materials-ml-predictor.git
-cd materials-ml-predictor
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+## What's Inside
+```
+materials-ml-predictor/
+├── src/                  # Main code
+│   ├── data_collection.py
+│   ├── preprocessing.py
+│   └── training.py
+├── web_app/             # Streamlit interface
+│   └── app.py
+├── notebooks/           # Jupyter analysis
+└── README.md
 ```
 
-Get a free API key from [materialsproject.org](https://materialsproject.org) and set it:
+## Quick Start
+```bash
+# 1. Install everything
+pip install -r requirements.txt
+
+# 2. Get API key from materialsproject.org
+export MP_API_KEY='your_key'
+
+# 3. Run the pipeline
+python src/data_collection.py
+python src/preprocessing.py
+python src/training.py
+
+# 4. Try the web app
+streamlit run web_app/app.py
+```
+
+## What Each File Does
+
+**data_collection.py** - Downloads materials data from Materials Project. Takes about 5-10 minutes for 1000 materials.
+
+**preprocessing.py** - Turns chemical formulas into numbers that ML models can understand. Creates ~98 features per material.
+
+**training.py** - Trains 4 different models and compares them. Takes 10-20 minutes depending on your computer.
+
+**app.py** - Web interface where you can type in any chemical formula and get predictions from all models.
+
+## Things I Found Out
+
+- Random Forest works really well for this (better than I expected)
+- The training data is super imbalanced - 79% metals!
+- Models struggle with insulators because there aren't many in the dataset
+- Neural networks are overkill for this problem honestly
+
+## If Something Breaks
+
+**"No API key found"**
 ```bash
 export MP_API_KEY='your_key_here'
 ```
 
-### Run the Pipeline
-```bash
-python src/data_collection.py      # Download materials data
-python src/preprocessing.py        # Generate features
-python src/training.py             # Train models
-streamlit run web_app/app.py       # Launch web interface
-```
+**Models predict weird values**
+- Probably forgot to run preprocessing first
+- Make sure you have the data/ folder with band_gaps.csv
 
-## What I Learned
+**Web app crashes**
+- Check that models/ folder exists with the .pkl files
+- Retrain if needed: `python src/training.py`
 
-**The models work really well for certain materials but not others.** Random Forest nails predictions for metals (like Fe and Cu both predicted ~0.5 eV, actual 0 eV). But all the models struggle with insulators like NaCl.
+## What I'd Change
 
-Turns out the training data was super imbalanced - 79% metals, only 4% insulators. This is a common problem in materials databases since metals are easier to compute and more commonly studied.
+If I were to redo this:
+1. Collect more balanced data (equal amounts of metals, semiconductors, insulators)
+2. Add crystal structure features, not just composition
+3. Try graph neural networks
+4. Add confidence intervals to predictions
 
-**Potential fixes:**
-- Sample materials more evenly across band gap ranges
-- Use class weighting in the models
-- Train separate models for different material types
+## Playing Around
 
-## Tech Used
+The web app is the fun part. Try:
+- **Si** (silicon) - should predict ~1 eV
+- **Fe** (iron) - should predict ~0 eV
+- **NaCl** (salt) - this one fails (predicts way too low)
 
-- PyTorch for neural networks
-- scikit-learn and XGBoost for tree-based models
-- pymatgen and matminer for materials features
-- Streamlit for the web interface
-- Materials Project API for data
-
-## Project Structure
-```
-materials-ml-predictor/
-├── src/
-│   ├── data_collection.py    # Gets data from Materials Project
-│   ├── preprocessing.py       # Creates features from formulas
-│   └── training.py           # Trains and compares models
-├── web_app/
-│   └── app.py                # Interactive prediction interface
-├── notebooks/
-│   └── 01_data_exploration.ipynb
-├── requirements.txt
-└── README.md
-```
-
-## Future Ideas
-
-- Add crystal structure features (currently only using composition)
-- Try graph neural networks
-- Predict multiple properties at once
-- Add uncertainty estimates to predictions
-- Balance the training dataset better
-
-## Data Source
-
-All materials data comes from the [Materials Project](https://materialsproject.org/), an open database of computed material properties.
-
-## License
-
-MIT License - feel free to use this however you want.
+The failure cases are actually the interesting part - they show the model's limitations.
 
 ---
 
-Built to learn more about ML for materials science. If you find bugs or have suggestions, open an issue!
+Questions? Open an issue or fork it and experiment!
