@@ -1,0 +1,44 @@
+﻿# Python
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Data files (too large for GitHub)
+data/
+*.csv
+*.npy
+
+# Model files (too large)
+models/
+*.pkl
+*.pth
+
+# Results
+results/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables (NEVER commit API keys!)
+.env
+*.env
+
+# Temporary files
+check_data.py
+*.log
