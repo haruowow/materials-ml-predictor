@@ -1,165 +1,104 @@
-﻿# Materials Property Predictor 🔬
+﻿# Materials Property Predictor
 
-Machine learning system for predicting materials properties (band gap, formation energy) from chemical composition. Built for materials discovery acceleration using Materials Project data.
+Machine learning models for predicting band gaps and other properties of materials from their chemical formulas. Uses data from the Materials Project database.
 
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
+## What It Does
 
-## 🎯 Project Overview
+This tool predicts materials properties (like band gap energy) just from knowing the chemical formula. Instead of running expensive simulations or lab experiments, you can get instant predictions for thousands of materials.
 
-This project demonstrates:
-- **Data Collection**: Automated Materials Project API integration
-- **Feature Engineering**: 98 composition-based features from chemical formulas
-- **Machine Learning**: 4 models (Ridge, Random Forest, XGBoost, Neural Network)
-- **Web Interface**: Interactive Streamlit app for predictions
-- **Model Analysis**: Performance evaluation and limitations discovery
+I built this to explore how well different ML approaches work for materials science problems - turns out Random Forest and XGBoost work surprisingly well for this.
 
-## 📊 Results
+## Results
 
-### Model Performance (Band Gap Prediction)
+Tested four different models on 1000 materials:
 
-| Model | Test R² | Test MAE (eV) | Best For |
-|-------|---------|---------------|----------|
-| Ridge Regression | ~0.83 | ~0.48 | Baseline |
-| Random Forest | ~0.89 | ~0.35 | Metals & Semiconductors |
-| XGBoost | ~0.90 | ~0.32 | Overall Performance |
-| Neural Network | ~0.91 | ~0.30 | Complex Patterns |
+- **Random Forest**: Best for metals and semiconductors (MAE ~0.35 eV)
+- **XGBoost**: Most consistent overall (R² ~0.90)
+- **Neural Network**: Highest accuracy (R² ~0.91)
+- **Ridge Regression**: Good baseline but struggles with non-linear patterns
 
 ### Example Predictions
 
-| Material | Random Forest | Actual | Error |
-|----------|---------------|--------|-------|
-| Si (semiconductor) | 0.900 eV | 1.1 eV | 0.2 eV |
-| Fe (metal) | 0.504 eV | 0.0 eV | 0.5 eV |
-| TiO2 (semiconductor) | 2.613 eV | 3.0 eV | 0.4 eV |
+| Material | Prediction | Actual | Notes |
+|----------|------------|--------|-------|
+| Silicon | 0.90 eV | 1.1 eV | Pretty close |
+| Iron | 0.50 eV | 0.0 eV | Correctly identifies as metal |
+| TiO2 | 2.61 eV | 3.0 eV | Good estimate |
 
-## 🔧 Tech Stack
+## How to Use It
 
-- **ML/Data Science**: PyTorch, scikit-learn, XGBoost, pandas, NumPy
-- **Materials Science**: pymatgen, matminer, Materials Project API
-- **Visualization**: matplotlib, seaborn, Plotly
-- **Web App**: Streamlit
-- **Development**: Jupyter notebooks
-
-## 🚀 Quick Start
-
-### Prerequisites
-\\\ash
-Python 3.8+
-Materials Project API key (free from materialsproject.org)
-\\\
-
-### Installation
-\\\ash
-# Clone repository
-git clone https://github.com/yourusername/materials_ml_predictor.git
-cd materials_ml_predictor
-
-# Create virtual environment
+### Setup
+```bash
+git clone https://github.com/haruowo/materials-ml-predictor.git
+cd materials-ml-predictor
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+```
 
-# Set API key
-export MP_API_KEY='your_api_key_here'
-\\\
+Get a free API key from [materialsproject.org](https://materialsproject.org) and set it:
+```bash
+export MP_API_KEY='your_key_here'
+```
 
-### Usage
-\\\ash
-# 1. Collect data
-python src/data_collection.py
+### Run the Pipeline
+```bash
+python src/data_collection.py      # Download materials data
+python src/preprocessing.py        # Generate features
+python src/training.py             # Train models
+streamlit run web_app/app.py       # Launch web interface
+```
 
-# 2. Feature engineering
-python src/preprocessing.py
+## What I Learned
 
-# 3. Train models
-python src/training.py
+**The models work really well for certain materials but not others.** Random Forest nails predictions for metals (like Fe and Cu both predicted ~0.5 eV, actual 0 eV). But all the models struggle with insulators like NaCl.
 
-# 4. Launch web app
-streamlit run web_app/app.py
-\\\
+Turns out the training data was super imbalanced - 79% metals, only 4% insulators. This is a common problem in materials databases since metals are easier to compute and more commonly studied.
 
-## 📁 Project Structure
+**Potential fixes:**
+- Sample materials more evenly across band gap ranges
+- Use class weighting in the models
+- Train separate models for different material types
 
-\\\
-materials_ml_predictor/
+## Tech Used
+
+- PyTorch for neural networks
+- scikit-learn and XGBoost for tree-based models
+- pymatgen and matminer for materials features
+- Streamlit for the web interface
+- Materials Project API for data
+
+## Project Structure
+```
+materials-ml-predictor/
 ├── src/
-│   ├── data_collection.py    # Materials Project API interface
-│   ├── preprocessing.py       # Feature engineering
-│   └── training.py           # Model training & evaluation
+│   ├── data_collection.py    # Gets data from Materials Project
+│   ├── preprocessing.py       # Creates features from formulas
+│   └── training.py           # Trains and compares models
 ├── web_app/
-│   └── app.py                # Streamlit interface
+│   └── app.py                # Interactive prediction interface
 ├── notebooks/
 │   └── 01_data_exploration.ipynb
 ├── requirements.txt
 └── README.md
-\\\
+```
 
-## 🔍 Key Findings
+## Future Ideas
 
-### Model Performance
-- **Random Forest** excels at metals (0 eV) and semiconductors (1-3 eV)
-- **Neural Network** achieves highest overall R² (~0.91)
-- **Ridge Regression** struggles with non-linear relationships
+- Add crystal structure features (currently only using composition)
+- Try graph neural networks
+- Predict multiple properties at once
+- Add uncertainty estimates to predictions
+- Balance the training dataset better
 
-### Dataset Analysis
-- Training data: 1000 materials from Materials Project
-- **Imbalance identified**: 78.7% metals, only 4.1% insulators
-- Models underpredict wide band gap materials (>5 eV)
+## Data Source
 
-### Proposed Improvements
-1. Stratified sampling for balanced dataset
-2. Class weighting for rare material types
-3. Separate models for different band gap ranges
-4. Transfer learning from larger databases
+All materials data comes from the [Materials Project](https://materialsproject.org/), an open database of computed material properties.
 
-## 💡 Future Work
+## License
 
-- [ ] Graph Neural Networks for crystal structure
-- [ ] Multi-task learning (predict multiple properties)
-- [ ] Active learning integration with DFT
-- [ ] Uncertainty quantification
-- [ ] API deployment (FastAPI/Flask)
-
-## 📊 Example Usage
-
-\\\python
-from preprocessing import MaterialsFeatureEngineer
-import joblib
-
-# Load trained model
-model = joblib.load('models/random_forest.pkl')
-engineer = MaterialsFeatureEngineer()
-engineer.load_preprocessor('models')
-
-# Predict band gap
-formula = "Si"
-features = engineer.create_features(formula)
-band_gap = model.predict(features)
-print(f"Predicted band gap for {formula}: {band_gap:.2f} eV")
-\\\
-
-## 📚 References
-
-- [Materials Project](https://materialsproject.org/) - Data source
-- [pymatgen](https://pymatgen.org/) - Materials analysis library
-- [matminer](https://hackingmaterials.lbl.gov/matminer/) - Feature engineering
-
-## 📝 License
-
-MIT License - see LICENSE file
-
-## 🤝 Acknowledgments
-
-- Materials Project for providing open materials data
-- Anthropic for Claude AI assistance in development
-
-## 👤 Author
-
-Your Name - [GitHub](https://github.com/yourusername)
+MIT License - feel free to use this however you want.
 
 ---
 
-**Note**: This project was developed as part of my MIT application portfolio, demonstrating machine learning, materials science, and software engineering skills.
+Built to learn more about ML for materials science. If you find bugs or have suggestions, open an issue!
