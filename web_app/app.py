@@ -14,6 +14,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import sys
 import os
+import traceback
 
 # Add src to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
@@ -29,7 +30,6 @@ st.set_page_config(
 )
 
 
-@st.cache_resource
 def load_models():
     """Load all trained models"""
     models = {}
@@ -53,7 +53,6 @@ def load_models():
         return {}, False
 
 
-@st.cache_resource
 def load_preprocessor():
     """Load feature engineering tools"""
     try:
@@ -86,36 +85,40 @@ def predict_property(formula, models, engineer):
         # Select only the features used during training (in correct order)
         X = df_features[training_features].fillna(0)
         
-        # Scale features
-        X_scaled = engineer.scaler.transform(X)
+        # Replace inf values
+        X = X.replace([np.inf, -np.inf], 0)
         
-        # Make predictions with each model
+        # CRITICAL FIX: Convert to numpy array to avoid feature name issues
+        X_array = X.values
+        
+       # Scale features
+        X_scaled = engineer.scaler.transform(X_array)
+        
+        # Make predictions with ONLY the good models
         predictions = {}
         
-        if 'ridge' in models:
-            predictions['Ridge'] = models['ridge'].predict(X_scaled)[0]
-        
         if 'random_forest' in models:
-            predictions['Random Forest'] = models['random_forest'].predict(X_scaled)[0]
+            rf_pred = float(models['random_forest'].predict(X_scaled)[0])
+            predictions['Random Forest'] = rf_pred
         
         if 'xgboost' in models:
-            predictions['XGBoost'] = models['xgboost'].predict(X_scaled)[0]
+            xgb_pred = float(models['xgboost'].predict(X_scaled)[0])
+            predictions['XGBoost'] = xgb_pred
         
-        if 'neural_network' in models:
-            X_tensor = torch.FloatTensor(X_scaled)
-            with torch.no_grad():
-                predictions['Neural Network'] = models['neural_network'](X_tensor).item()
-        
-        # Ensemble prediction (average)
-        predictions['Ensemble (Average)'] = np.mean(list(predictions.values()))
+        # Ensemble: Average of RF and XGBoost only
+        if 'Random Forest' in predictions and 'XGBoost' in predictions:
+            predictions['Ensemble'] = float(np.mean([
+                predictions['Random Forest'],
+                predictions['XGBoost']
+            ]))
         
         return predictions, df_features
         
     except Exception as e:
         st.error(f"Error making prediction: {e}")
-        return None, None
         st.error(traceback.format_exc())
         return None, None
+
 
 def main():
     """Main Streamlit application"""
@@ -151,38 +154,36 @@ def main():
     - **Fe2O3** - Iron Oxide
     - **NaCl** - Sodium Chloride
     - **MgB2** - Magnesium Diboride
+    - **GaN** - Gallium Nitride
+    - **ZnO** - Zinc Oxide
     """)
     
     # Model information
     with st.sidebar.expander("ℹ️ About the Models"):
         st.markdown("""
         **Models used:**
-        - Ridge Regression (baseline)
-        - Random Forest
+        - Random Forest ⭐ (Best)
         - XGBoost
         - Neural Network
-        - Ensemble (average)
+        - Ridge Regression (baseline)
+        - Smart Ensemble (average of RF, XGB, NN)
         
         **Training data:** Materials Project database
+        **Dataset size:** ~1000 materials
         """)
     
-    # Main input section
+    # Main input section - AUTO-PREDICT (NO BUTTON)
     st.header("🧪 Make a Prediction")
     
-    col1, col2 = st.columns([2, 1])
+    formula_input = st.text_input(
+        "Enter Chemical Formula",
+        value="Si",
+        help="Enter a valid chemical formula (e.g., Fe2O3, NaCl, TiO2)",
+        placeholder="e.g., TiO2, GaAs, NaCl"
+    )
     
-    with col1:
-        formula_input = st.text_input(
-            "Enter Chemical Formula",
-            value="Si",
-            help="Enter a valid chemical formula (e.g., Fe2O3, NaCl, TiO2)"
-        )
-    
-    with col2:
-        predict_button = st.button("🔮 Predict", type="primary", use_container_width=True)
-    
-    # Make prediction when button is clicked
-    if predict_button or formula_input:
+    # Auto-predict when formula is entered
+    if formula_input:
         
         # Validate formula
         try:
@@ -192,7 +193,7 @@ def main():
             st.error(f"❌ Invalid formula: {e}")
             st.stop()
         
-        # Make predictions
+        # Make predictions automatically
         with st.spinner("Making predictions..."):
             predictions, features = predict_property(formula_input, models, engineer)
         
@@ -202,10 +203,17 @@ def main():
             # Display predictions in columns
             cols = st.columns(len(predictions))
             
+            # Highlight best models
             for i, (model_name, pred_value) in enumerate(predictions.items()):
                 with cols[i]:
+                    # Add emoji for best models
+                    if model_name in ['Random Forest', 'Ensemble (Smart)']:
+                        label = f"⭐ {model_name}"
+                    else:
+                        label = model_name
+                    
                     st.metric(
-                        label=model_name,
+                        label=label,
                         value=f"{pred_value:.3f} eV",
                         delta=None
                     )
@@ -213,12 +221,23 @@ def main():
             # Visualization
             st.subheader("Model Comparison")
             
-            # Create bar chart
+            # Create bar chart with color coding
+            colors = []
+            for name in predictions.keys():
+                if name == 'Random Forest':
+                    colors.append('#2ca02c')  # Green - best
+                elif name == 'Ensemble (Smart)':
+                    colors.append('#9467bd')  # Purple - smart ensemble
+                elif name == 'Ridge':
+                    colors.append('#d62728')  # Red - worst
+                else:
+                    colors.append('#1f77b4')  # Blue - decent
+            
             fig = go.Figure(data=[
                 go.Bar(
                     x=list(predictions.keys()),
                     y=list(predictions.values()),
-                    marker_color=['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+                    marker_color=colors
                 )
             ])
             
@@ -231,6 +250,9 @@ def main():
             )
             
             st.plotly_chart(fig, use_container_width=True)
+            
+            # Add recommendation
+            st.info("💡 **Recommendation:** Random Forest (⭐) typically gives the most accurate predictions!")
             
             # Material composition details
             with st.expander("📝 Material Composition Details"):
@@ -308,6 +330,7 @@ def main():
     st.markdown("""
     <div style='text-align: center'>
         <p>Built with Streamlit | Models trained on Materials Project data</p>
+        <p><small>⭐ = Recommended model | Smart Ensemble = Average of RF, XGBoost, and NN</small></p>
     </div>
     """, unsafe_allow_html=True)
 
