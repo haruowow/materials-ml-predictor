@@ -2,11 +2,11 @@
 
 Machine learning models for predicting band gaps and other properties of inorganic materials from their chemical composition.
 
-## 🎯 Project Overview
+##  Project Overview
 
 This project uses machine learning to predict the electronic band gap of materials based on their chemical formula. The models are trained on data from the Materials Project database and achieve an average prediction error of **0.35 eV**.
 
-## 🚀 Key Features
+##  Key Features
 
 - **High Accuracy**: Random Forest model achieves 92.4% R² score
 - **Multiple Models**: Random Forest, XGBoost, and Smart Ensemble predictions
@@ -14,7 +14,7 @@ This project uses machine learning to predict the electronic band gap of materia
 - **Batch Processing**: Upload CSV files for bulk predictions
 - **Real-time Predictions**: Auto-predict as you type chemical formulas
 
-## 📊 Model Performance
+##  Model Performance
 
 | Model | Test R² | Test MAE | Test RMSE |
 |-------|---------|----------|-----------|
@@ -33,7 +33,7 @@ This project uses machine learning to predict the electronic band gap of materia
 
 **Average Error: 0.35 eV** ✓
 
-## 🛠️ Installation
+##  Installation
 
 ### Prerequisites
 
@@ -65,7 +65,7 @@ $env:MP_API_KEY = "your_api_key_here"
 export MP_API_KEY='your_api_key_here'
 ```
 
-## 📖 Usage
+##  Usage
 
 ### Quick Start
 ```bash
@@ -112,7 +112,7 @@ prediction = rf_model.predict(X_scaled)[0]
 print(f"{formula} band gap: {prediction:.2f} eV")
 ```
 
-## 📁 Project Structure
+##  Project Structure
 ```
 materials-ml-predictor/
 ├── data/                      # Data files
@@ -161,7 +161,7 @@ The model uses composition-based features including:
    - Reduces prediction variance
    - Recommended for production use
 
-## 📈 Training Details
+##  Training Details
 
 - **Dataset Size**: ~1000 materials
 - **Training Split**: 80/20 train/test
@@ -169,7 +169,7 @@ The model uses composition-based features including:
 - **Training Time**: ~15 minutes on standard laptop
 - **Cross-validation**: 3-fold CV used during training
 
-## 🎯 Use Cases
+##  Use Cases
 
 This model is suitable for:
 - ✅ Quick materials screening
@@ -182,21 +182,21 @@ Not recommended for:
 - ❌ Materials far outside the training distribution
 - ❌ Production decisions without experimental validation
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## 📄 License
+##  License
 
 This project is open source and available under the MIT License.
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Data from the [Materials Project](https://materialsproject.org/)
 - Built with [scikit-learn](https://scikit-learn.org/), [XGBoost](https://xgboost.readthedocs.io/), and [Streamlit](https://streamlit.io/)
 - Inspired by materials informatics research
 
-## 📧 Contact
+##  Contact
 
 For questions or collaborations, please open an issue on GitHub.
 
