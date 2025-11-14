@@ -124,7 +124,7 @@ def main():
     """Main Streamlit application"""
     
     # Title and description
-    st.title("🔬 Materials Property Predictor")
+    st.title("Materials Property Predictor")
     st.markdown("""
     Predict materials properties using machine learning! Enter a chemical formula below 
     to get predictions from multiple ML models.
@@ -144,7 +144,7 @@ def main():
     st.success(f"✓ Loaded {len(models)} models successfully!")
     
     # Sidebar with example formulas
-    st.sidebar.header("📋 Example Formulas")
+    st.sidebar.header("Example Formulas")
     st.sidebar.markdown("""
     Try these example materials:
     - **Si** - Silicon (semiconductor)
@@ -159,7 +159,7 @@ def main():
     """)
     
     # Model information
-    with st.sidebar.expander("ℹ️ About the Models"):
+    with st.sidebar.expander("About the Models"):
         st.markdown("""
         **Models used:**
         - Random Forest ⭐ (Best)
@@ -173,7 +173,7 @@ def main():
         """)
     
     # Main input section - AUTO-PREDICT (NO BUTTON)
-    st.header("🧪 Make a Prediction")
+    st.header("Make a Prediction")
     
     formula_input = st.text_input(
         "Enter Chemical Formula",
@@ -252,7 +252,7 @@ def main():
             st.plotly_chart(fig, use_container_width=True)
             
             # Add recommendation
-            st.info("💡 **Recommendation:** Random Forest (⭐) typically gives the most accurate predictions!")
+            st.info("**Recommendation:** Random Forest (⭐) typically gives the most accurate predictions!")
             
             # Material composition details
             with st.expander("📝 Material Composition Details"):
@@ -264,7 +264,7 @@ def main():
                 st.dataframe(pd.DataFrame(comp_data), use_container_width=True)
             
             # Feature values (sample)
-            with st.expander("🔍 Feature Values (Sample)"):
+            with st.expander("Feature Values (Sample)"):
                 # Show first 20 features
                 sample_features = features[engineer.feature_names[:20]].iloc[0]
                 feature_df = pd.DataFrame({
@@ -274,7 +274,7 @@ def main():
                 st.dataframe(feature_df, use_container_width=True, height=400)
     
     # Batch prediction section
-    st.header("📦 Batch Prediction")
+    st.header("Batch Prediction")
     st.markdown("Upload a CSV file with a 'formula' column to predict properties for multiple materials.")
     
     uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
@@ -290,7 +290,7 @@ def main():
             st.write(f"Loaded {len(df_batch)} formulas")
             st.dataframe(df_batch.head())
             
-            if st.button("🚀 Run Batch Prediction"):
+            if st.button("Run Batch Prediction"):
                 with st.spinner("Processing batch predictions..."):
                     results = []
                     
@@ -316,7 +316,7 @@ def main():
                     # Download button
                     csv = results_df.to_csv(index=False)
                     st.download_button(
-                        label="📥 Download Results",
+                        label="Download Results",
                         data=csv,
                         file_name="predictions.csv",
                         mime="text/csv"
