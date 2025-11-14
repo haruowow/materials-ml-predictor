@@ -2,7 +2,7 @@
 
 Welcome to the Materials ML Predictor! This guide will walk you through everything you need to know.
 
-## 📚 Table of Contents
+##  Table of Contents
 
 1. [What This Project Does](#what-this-project-does)
 2. [Quick Start](#quick-start)
@@ -15,7 +15,7 @@ Welcome to the Materials ML Predictor! This guide will walk you through everythi
 
 ---
 
-## 🎯 What This Project Does
+##  What This Project Does
 
 This project predicts the **electronic band gap** of materials from their chemical formula using machine learning.
 
@@ -33,7 +33,7 @@ Output: 1.15 eV (Semiconductor - good for LEDs!)
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Installation (5 minutes)
 ```bash
@@ -70,7 +70,7 @@ Open http://localhost:8501 and try: `Si`, `GaAs`, `TiO2`
 
 ---
 
-## 📖 Detailed Workflow
+##  Detailed Workflow
 
 ### Step 1: Data Collection (`data_collection.py`)
 
@@ -195,7 +195,7 @@ streamlit run web_app/app.py
 ```
 Enter Formula: [Si         ]  ← Type here
 
-📊 Prediction Results
+ Prediction Results
 ⭐ Random Forest:  0.900 eV
 XGBoost:          1.948 eV
 Ensemble:         1.424 eV
@@ -205,7 +205,7 @@ Ensemble:         1.424 eV
 
 ---
 
-## 📊 Understanding the Results
+##  Understanding the Results
 
 ### Prediction Accuracy
 
@@ -257,7 +257,7 @@ Exotic Material:
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 ```
 materials-ml-predictor/
 │
@@ -305,7 +305,7 @@ materials-ml-predictor/
 
 ---
 
-## 🧠 How the Models Work
+##  How the Models Work
 
 ### Input → Output Flow
 ```
@@ -364,7 +364,7 @@ Top 10 most important features for prediction:
 
 ---
 
-## 🔧 Customization Guide
+##  Customization Guide
 
 ### Change Dataset Size
 
@@ -411,7 +411,7 @@ predictions['Ensemble'] = (
 
 ---
 
-## 🐛 Troubleshooting
+##  Troubleshooting
 
 ### Issue: "Cannot import name 'MPRester'"
 
@@ -473,7 +473,7 @@ streamlit cache clear
 
 ---
 
-## 🎓 Learning Resources
+##  Learning Resources
 
 ### Understanding the Science
 - [Materials Project](https://materialsproject.org/) - Source of our data
@@ -492,7 +492,7 @@ streamlit cache clear
 
 ---
 
-## 🎯 Best Practices
+##  Best Practices
 
 ### For Accurate Predictions
 1. ✅ Always use **Random Forest** as primary prediction
@@ -517,7 +517,7 @@ streamlit cache clear
 
 ---
 
-## 🚀 Next Steps
+##  Next Steps
 
 1. **Try the examples**: Test Si, GaAs, TiO2, GaN
 2. **Explore the notebooks**: See data analysis
@@ -527,7 +527,7 @@ streamlit cache clear
 
 ---
 
-## 📞 Getting Help
+##  Getting Help
 
 - **Issues**: Open a GitHub issue
 - **Questions**: Check PROJECT_SUMMARY.md and WORKFLOW.md
@@ -535,7 +535,7 @@ streamlit cache clear
 
 ---
 
-## 🎉 You're Ready!
+##  You're Ready!
 
 You now understand:
 - ✅ What the project does
