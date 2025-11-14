@@ -1,10 +1,10 @@
 # Materials ML Predictor - Project Summary
 
-## 🎯 Executive Summary
+##  Executive Summary
 
 A machine learning system that predicts electronic band gaps of inorganic materials from their chemical formulas. Achieved **0.35 eV average prediction error** using ensemble methods on Materials Project data.
 
-## 📊 Final Results
+##  Final Results
 
 ### Model Performance (Test Set)
 
@@ -29,7 +29,7 @@ Tested on common semiconductors and oxides:
 
 **Average Absolute Error: 0.35 eV**
 
-## 🔬 Technical Approach
+##  Technical Approach
 
 ### Data Collection
 - **Source**: Materials Project API
@@ -66,7 +66,7 @@ Tested on common semiconductors and oxides:
 - **Ridge Regression**: Linear model cannot capture non-linear relationships in materials (R²=0.81, but poor predictions)
 - **Neural Network**: Severe overfitting (Train R²=0.98, Test R²=0.42), unstable predictions
 
-## 🏗️ System Architecture
+##  System Architecture
 ```
 User Input (Formula)
     ↓
@@ -83,26 +83,26 @@ Smart Ensemble (Average)
 Output (Band Gap in eV)
 ```
 
-## 📈 Key Learnings
+##  Key Learnings
 
-### What Worked Well ✅
+### What Worked Well 
 1. **Random Forest**: Most reliable, 92.4% R² with good generalization
 2. **Simple features**: Composition-based features sufficient for 0.35 eV accuracy
 3. **Natural data distribution**: Imbalanced dataset (79% metals) performed better than forced balancing
 4. **Ensemble approach**: Averaging RF + XGBoost reduces variance
 
-### What Didn't Work ❌
+### What Didn't Work 
 1. **Neural Networks**: Overfitting despite regularization (dropout, early stopping)
 2. **Linear models**: Too simple for materials property relationships
 3. **Balanced dataset**: Artificially balancing categories introduced rare/exotic materials that confused models
 4. **Aggressive hyperparameter tuning**: GridSearch sometimes caused overfitting to validation set
 
-### Surprising Findings 🔍
+### Surprising Findings 
 1. **Fewer materials > More materials**: 1,000 common materials outperformed 2,500 materials with exotics
 2. **Simpler is better**: Basic composition features (99) performed as well as complex ones
 3. **Model disagreement**: When RF and XGBoost disagree significantly (>1 eV), prediction is likely unreliable
 
-## 🎯 Model Comparison with Literature
+##  Model Comparison with Literature
 
 | Approach | Typical MAE | Our Results | Notes |
 |----------|-------------|-------------|-------|
@@ -113,7 +113,7 @@ Output (Band Gap in eV)
 
 **Conclusion**: Our simple model achieves competitive accuracy for composition-only predictions.
 
-## 💡 Recommendations for Future Work
+##  Recommendations for Future Work
 
 ### Immediate Improvements (Easy)
 1. **Increase dataset to 5,000 materials**: Expected improvement: -0.05 to -0.10 eV MAE
@@ -130,7 +130,7 @@ Output (Band Gap in eV)
 2. **Transfer learning**: Use pre-trained models from large materials databases
 3. **Physics-informed ML**: Incorporate known physics relationships as constraints
 
-## 🚀 Production Deployment Considerations
+##  Production Deployment Considerations
 
 ### Strengths
 ✅ Fast predictions (<100ms per material)
@@ -157,7 +157,7 @@ Output (Band Gap in eV)
 - ❌ Regulatory or safety-critical decisions
 - ❌ Replacing experimental validation
 
-## 📊 Dataset Statistics
+##  Dataset Statistics
 
 ### Training Data Distribution
 - **Total materials**: 1,000
@@ -173,7 +173,7 @@ Output (Band Gap in eV)
 - **Mean**: 0.53 eV
 - **Median**: 0.00 eV
 
-## 🎓 Educational Value
+##  Educational Value
 
 This project demonstrates:
 1. **End-to-end ML pipeline**: Data collection → Processing → Training → Deployment
@@ -181,7 +181,7 @@ This project demonstrates:
 3. **Scientific ML**: Domain knowledge + machine learning
 4. **Production considerations**: Not just accuracy, but also reliability and interpretability
 
-## 📚 Technologies Used
+##  Technologies Used
 
 - **Data**: Materials Project API
 - **ML**: scikit-learn, XGBoost, PyTorch
@@ -190,7 +190,7 @@ This project demonstrates:
 - **Deployment**: Streamlit
 - **Version Control**: Git/GitHub
 
-## 🎯 Conclusion
+##  Conclusion
 
 Built a production-ready materials property prediction system with:
 - ✅ **0.35 eV average error** (competitive with literature)
