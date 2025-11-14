@@ -2,12 +2,12 @@
 
 Get up and running with Materials ML Predictor in 10 minutes!
 
-## ⚡ Prerequisites
+##  Prerequisites
 
 - Python 3.8 or higher
 - Materials Project API key ([Get one free here](https://materialsproject.org/api))
 
-## 🚀 Installation (5 minutes)
+##  Installation (5 minutes)
 
 ### 1. Clone and Setup
 ```bash
@@ -42,7 +42,7 @@ set MP_API_KEY=your_api_key_here
 export MP_API_KEY='your_api_key_here'
 ```
 
-## 🎯 Usage (5 minutes)
+##  Usage (5 minutes)
 
 ### Option 1: Use Pre-trained Models (If Available)
 
@@ -70,7 +70,7 @@ python src/training.py
 streamlit run web_app/app.py
 ```
 
-## 🧪 Try It Out!
+##  Try It Out!
 
 Once the web app is running:
 
@@ -90,7 +90,7 @@ Once the web app is running:
 
 Typical accuracy: **±0.35 eV**
 
-## 📊 Quick Python API
+##  Quick Python API
 
 Use the models in your own code:
 ```python
@@ -122,7 +122,7 @@ print(f"  XGBoost: {xgb_pred:.2f} eV")
 print(f"  Ensemble: {ensemble:.2f} eV")
 ```
 
-## 🎯 Model Performance
+##  Model Performance
 
 Our models achieve:
 - **R² Score**: 92.4% (Random Forest)
@@ -131,7 +131,7 @@ Our models achieve:
 
 Best model: **Random Forest** (most reliable)
 
-## 🔧 Troubleshooting
+##  Troubleshooting
 
 ### "No module named 'mp_api'"
 ```bash
@@ -159,33 +159,25 @@ python src/training.py
 - Ensemble should be within 0.3-0.5 eV of literature values
 - Some materials may be outside the training distribution
 
-## 📚 Next Steps
+##  Next Steps
 
 - **Read the full documentation**: Check out START_HERE.md for detailed explanations
 - **Explore notebooks**: `notebooks/01_data_exploration.ipynb` has data analysis
 - **Customize models**: Edit `src/training.py` to try different hyperparameters
 - **Add more data**: Increase dataset size in `src/data_collection.py`
 
-## 🎓 Quick Tips
 
-✅ **Always trust Random Forest first** - it's the most reliable
-✅ **Ensemble is good for safety** - averages out errors
-✅ **Expect ±0.35 eV error** - this is normal for ML models
-✅ **Test with common materials** - Si, GaAs, TiO2, GaN work best
-
-## 💡 Common Use Cases
+##  Common Use Cases
 
 1. **Materials Screening**: Quickly filter thousands of candidates
 2. **Educational Demo**: Show students how ML works in science
 3. **Research Tool**: Get initial estimates before DFT calculations
 4. **Data Exploration**: Understand structure-property relationships
 
-## 🚀 You're Ready!
+##  You're Ready!
 
 You now have a working materials property predictor. Start exploring and making predictions!
 
 Need help? Check START_HERE.md or open an issue on GitHub.
 
 ---
-
-**Happy Predicting! 🔬**
